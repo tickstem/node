@@ -12,6 +12,11 @@
     }
   },
   "files": ["dist"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/tickstem/node" },
+  "homepage": "https://tickstem.dev",
+  "keywords": ["tickstem", "email", "verification", "validation", "sdk"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --dts-resolve",
     "test": "vitest run",
