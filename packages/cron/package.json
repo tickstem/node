@@ -1,7 +1,7 @@
 {
   "name": "@tickstem/cron",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Tickstem cron job SDK for Node.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,12 +11,25 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/tickstem/node" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tickstem/node"
+  },
   "homepage": "https://tickstem.dev",
-  "keywords": ["tickstem", "cron", "scheduler", "jobs", "sdk"],
-  "publishConfig": { "access": "public" },
+  "keywords": [
+    "tickstem",
+    "cron",
+    "scheduler",
+    "jobs",
+    "sdk"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --dts-resolve",
     "test": "vitest run",
