@@ -1,0 +1,29 @@
+{
+  "name": "@tickstem/verify",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Tickstem email verification SDK for Node.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --dts-resolve",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tickstem/core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "*",
+    "typescript": "*",
+    "vitest": "*",
+    "@types/node": "*"
+  }
+}
