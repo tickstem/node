@@ -42,6 +42,6 @@ export class TickstemClient {
       throw new APIError(response.status, message)
     }
 
-    return JSON.parse(text) as T
+    return (text ? JSON.parse(text) : undefined) as T
   }
 }
