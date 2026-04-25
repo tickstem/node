@@ -6,20 +6,20 @@ export interface Job {
   method: string
   description: string
   status: "active" | "paused" | "failing"
-  timeoutSecs: number
-  createdAt: string
-  updatedAt: string
-  lastRunAt: string | null
-  nextRunAt: string | null
+  timeout_secs: number
+  retries: number
+  created_at: string
+  updated_at: string
+  next_run_at: string | null
 }
 
 export interface Execution {
   id: string
-  jobId: string
+  job_id: string
   status: "success" | "failure" | "timeout"
-  statusCode: number | null
-  durationMs: number
-  triggeredAt: string
+  status_code: number | null
+  duration_ms: number
+  triggered_at: string
 }
 
 export interface RegisterParams {
@@ -28,5 +28,5 @@ export interface RegisterParams {
   endpoint: string
   method?: string
   description?: string
-  timeoutSecs?: number
+  timeout_secs?: number
 }

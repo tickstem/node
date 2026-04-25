@@ -9,7 +9,7 @@ export class CronClient extends TickstemClient {
   }
 
   list(): Promise<Job[]> {
-    return this.request<{ jobs: Job[] }>("GET", "/jobs").then((r) => r.jobs)
+    return this.request<{ jobs: Job[] | null }>("GET", "/jobs").then((r) => r.jobs ?? [])
   }
 
   get(jobId: string): Promise<Job> {
@@ -37,6 +37,6 @@ export class CronClient extends TickstemClient {
   }
 
   executions(jobId: string): Promise<Execution[]> {
-    return this.request<{ executions: Execution[] }>("GET", `/executions?job_id=${jobId}`).then((r) => r.executions)
+    return this.request<{ executions: Execution[] | null }>("GET", `/executions?job_id=${jobId}`).then((r) => r.executions ?? [])
   }
 }
