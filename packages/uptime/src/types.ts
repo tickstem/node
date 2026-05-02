@@ -17,6 +17,7 @@ export interface MonitorCheck {
   status_code: number | null
   duration_ms: number
   error: string
+  ssl_expires_at: string | null
   checked_at: string
 }
 
