@@ -1,3 +1,16 @@
+export type AssertionSource = "status_code" | "response_time" | "body"
+
+export type AssertionComparison =
+  | "eq" | "ne"
+  | "lt" | "lte" | "gt" | "gte"
+  | "contains" | "not_contains"
+
+export interface Assertion {
+  source: AssertionSource
+  comparison: AssertionComparison
+  target: string
+}
+
 export interface Monitor {
   id: string
   name: string
@@ -5,6 +18,8 @@ export interface Monitor {
   interval_secs: number
   timeout_secs: number
   status: "active" | "paused" | "failing"
+  ssl_expires_at: string | null
+  assertions: Assertion[]
   next_check_at: string | null
   created_at: string
   updated_at: string
@@ -26,6 +41,7 @@ export interface CreateParams {
   url: string
   interval_secs?: number
   timeout_secs?: number
+  assertions?: Assertion[]
 }
 
 export interface UpdateParams {
@@ -34,4 +50,5 @@ export interface UpdateParams {
   interval_secs?: number
   timeout_secs?: number
   status?: "active" | "paused"
+  assertions?: Assertion[]
 }
