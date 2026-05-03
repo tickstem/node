@@ -1,0 +1,47 @@
+{
+  "name": "@tickstem/heartbeat",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Tickstem heartbeat monitoring SDK for Node.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tickstem/node"
+  },
+  "homepage": "https://tickstem.dev",
+  "keywords": [
+    "tickstem",
+    "heartbeat",
+    "monitoring",
+    "dead-mans-switch",
+    "sdk"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --dts-resolve",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tickstem/core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "*",
+    "typescript": "*",
+    "vitest": "*",
+    "@types/node": "*"
+  }
+}
