@@ -25,11 +25,11 @@ export class HeartbeatClient extends TickstemClient {
   }
 
   pause(heartbeatId: string): Promise<Heartbeat> {
-    return this.request<Heartbeat>("POST", `/heartbeats/${heartbeatId}/pause`)
+    return this.request<Heartbeat>("PATCH", `/heartbeats/${heartbeatId}`, { status: "paused" })
   }
 
   resume(heartbeatId: string): Promise<Heartbeat> {
-    return this.request<Heartbeat>("POST", `/heartbeats/${heartbeatId}/resume`)
+    return this.request<Heartbeat>("PATCH", `/heartbeats/${heartbeatId}`, { status: "active" })
   }
 
   delete(heartbeatId: string): Promise<void> {

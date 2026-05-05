@@ -85,19 +85,27 @@ describe("HeartbeatClient", () => {
     expect(result.interval_secs).toBe(604800)
   })
 
-  it("given heartbeat id when pausing then returns paused heartbeat", async () => {
+  it("given heartbeat id when pausing then sends PATCH with paused status and returns paused heartbeat", async () => {
     const paused = { ...heartbeat, status: "paused" }
-    server = await startServer(() => ({ status: 200, body: paused }))
+    let capturedMethod = "", capturedUrl = "", capturedBody = ""
+    server = await startServer((method, url, body) => { capturedMethod = method; capturedUrl = url; capturedBody = body; return { status: 200, body: paused } })
     client = new HeartbeatClient("key", { baseURL: server.url })
     const result = await client.pause("hb1")
     expect(result.status).toBe("paused")
+    expect(capturedMethod).toBe("PATCH")
+    expect(capturedUrl).toBe("/v1/heartbeats/hb1")
+    expect(JSON.parse(capturedBody)).toMatchObject({ status: "paused" })
   })
 
-  it("given heartbeat id when resuming then returns active heartbeat", async () => {
-    server = await startServer(() => ({ status: 200, body: heartbeat }))
+  it("given heartbeat id when resuming then sends PATCH with active status and returns active heartbeat", async () => {
+    let capturedMethod = "", capturedUrl = "", capturedBody = ""
+    server = await startServer((method, url, body) => { capturedMethod = method; capturedUrl = url; capturedBody = body; return { status: 200, body: heartbeat } })
     client = new HeartbeatClient("key", { baseURL: server.url })
     const result = await client.resume("hb1")
     expect(result.status).toBe("active")
+    expect(capturedMethod).toBe("PATCH")
+    expect(capturedUrl).toBe("/v1/heartbeats/hb1")
+    expect(JSON.parse(capturedBody)).toMatchObject({ status: "active" })
   })
 
   it("given heartbeat id when deleting then resolves without error", async () => {
