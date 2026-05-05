@@ -25,11 +25,11 @@ export class CronClient extends TickstemClient {
   }
 
   pause(jobId: string): Promise<Job> {
-    return this.request<Job>("PATCH", `/jobs/${jobId}`, { status: "paused" })
+    return this.request<Job>("POST", `/jobs/${jobId}/pause`)
   }
 
   resume(jobId: string): Promise<Job> {
-    return this.request<Job>("PATCH", `/jobs/${jobId}`, { status: "active" })
+    return this.request<Job>("POST", `/jobs/${jobId}/resume`)
   }
 
   delete(jobId: string): Promise<void> {

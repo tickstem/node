@@ -3,13 +3,13 @@ import { createServer, type Server } from "node:http"
 import { CronClient } from "./client.js"
 import { APIError } from "@tickstem/core"
 
-function startServer(handler: (body: string) => { status: number; body: unknown }): Promise<{ url: string; close: () => void }> {
+function startServer(handler: (method: string, url: string, body: string) => { status: number; body: unknown }): Promise<{ url: string; close: () => void }> {
   return new Promise((resolve) => {
     const server: Server = createServer((req, res) => {
       let raw = ""
       req.on("data", (chunk: Buffer) => { raw += chunk.toString() })
       req.on("end", () => {
-        const result = handler(raw)
+        const result = handler(req.method ?? "", req.url ?? "", raw)
         res.writeHead(result.status, { "Content-Type": "application/json" })
         res.end(JSON.stringify(result.body))
       })
@@ -61,5 +61,27 @@ describe("CronClient", () => {
     server = await startServer(() => ({ status: 200, body: {} }))
     client = new CronClient("key", { baseURL: server.url })
     await expect(client.delete("j1")).resolves.not.toThrow()
+  })
+
+  it("given job id when pausing then sends POST to pause endpoint and returns paused job", async () => {
+    const job = { id: "j1", name: "test", schedule: "* * * * *", endpoint: "https://example.com", method: "GET", description: "", status: "paused", timeoutSecs: 30, createdAt: "", updatedAt: "", lastRunAt: null, nextRunAt: null }
+    let capturedMethod = "", capturedUrl = ""
+    server = await startServer((method, url) => { capturedMethod = method; capturedUrl = url; return { status: 200, body: job } })
+    client = new CronClient("key", { baseURL: server.url })
+    const result = await client.pause("j1")
+    expect(result.status).toBe("paused")
+    expect(capturedMethod).toBe("POST")
+    expect(capturedUrl).toBe("/v1/jobs/j1/pause")
+  })
+
+  it("given job id when resuming then sends POST to resume endpoint and returns active job", async () => {
+    const job = { id: "j1", name: "test", schedule: "* * * * *", endpoint: "https://example.com", method: "GET", description: "", status: "active", timeoutSecs: 30, createdAt: "", updatedAt: "", lastRunAt: null, nextRunAt: null }
+    let capturedMethod = "", capturedUrl = ""
+    server = await startServer((method, url) => { capturedMethod = method; capturedUrl = url; return { status: 200, body: job } })
+    client = new CronClient("key", { baseURL: server.url })
+    const result = await client.resume("j1")
+    expect(result.status).toBe("active")
+    expect(capturedMethod).toBe("POST")
+    expect(capturedUrl).toBe("/v1/jobs/j1/resume")
   })
 })
