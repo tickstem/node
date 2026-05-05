@@ -81,19 +81,33 @@ describe("UptimeClient", () => {
     expect(result.name).toBe("Updated")
   })
 
-  it("given monitor id when pausing then returns paused monitor", async () => {
+  it("given monitor id when pausing then sends PATCH with paused status and returns paused monitor", async () => {
     const paused = { ...monitor, status: "paused" }
-    server = await startServer(() => ({ status: 200, body: paused }))
+    let capturedMethod = "", capturedUrl = "", capturedBody = ""
+    server = await startServer((method, url, body) => {
+      capturedMethod = method; capturedUrl = url; capturedBody = body
+      return { status: 200, body: paused }
+    })
     client = new UptimeClient("key", { baseURL: server.url })
     const result = await client.pause("m1")
     expect(result.status).toBe("paused")
+    expect(capturedMethod).toBe("PATCH")
+    expect(capturedUrl).toBe("/v1/monitors/m1")
+    expect(JSON.parse(capturedBody)).toMatchObject({ status: "paused" })
   })
 
-  it("given monitor id when resuming then returns active monitor", async () => {
-    server = await startServer(() => ({ status: 200, body: monitor }))
+  it("given monitor id when resuming then sends PATCH with active status and returns active monitor", async () => {
+    let capturedMethod = "", capturedUrl = "", capturedBody = ""
+    server = await startServer((method, url, body) => {
+      capturedMethod = method; capturedUrl = url; capturedBody = body
+      return { status: 200, body: monitor }
+    })
     client = new UptimeClient("key", { baseURL: server.url })
     const result = await client.resume("m1")
     expect(result.status).toBe("active")
+    expect(capturedMethod).toBe("PATCH")
+    expect(capturedUrl).toBe("/v1/monitors/m1")
+    expect(JSON.parse(capturedBody)).toMatchObject({ status: "active" })
   })
 
   it("given monitor id when deleting then resolves without error", async () => {
